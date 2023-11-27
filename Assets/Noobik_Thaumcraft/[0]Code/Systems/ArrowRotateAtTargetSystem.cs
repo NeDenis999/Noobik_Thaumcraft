@@ -23,9 +23,7 @@ namespace Noobik_Thaumcraft
                 .position;
                 var direction = (targetPosition - transform.position).normalized;
                 
-                direction *= -1;
-                
-                Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+                Quaternion toRotation = Quaternion.LookRotation(-direction, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, speed * Time.deltaTime);
 
                 transform.eulerAngles = transform.eulerAngles.SetX(0);

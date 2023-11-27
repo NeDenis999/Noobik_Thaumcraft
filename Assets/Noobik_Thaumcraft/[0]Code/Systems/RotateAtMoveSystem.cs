@@ -18,11 +18,10 @@ namespace Noobik_Thaumcraft
                 ref var direction = ref directionComponent.Direction;
                 ref var transform = ref rotateComponent.Transform;
                 ref var speed = ref rotateComponent.Speed;
+                ref var rotation = ref rotateComponent.Quaternion;
 
-                direction *= -1;
-                
-                Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, speed * Time.deltaTime);  
+                Quaternion toRotation = Quaternion.LookRotation(-direction, Vector3.up);
+                rotation = Quaternion.RotateTowards(transform.rotation, toRotation, speed * Time.deltaTime);
             }
         }
     }

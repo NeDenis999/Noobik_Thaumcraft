@@ -61,13 +61,16 @@ namespace Noobik_Thaumcraft
                 .Add(new JoystickInputSystem())
                 .Add(new MovementSystem())
                 .Add(new RotateAtMoveSystem())
+                .Add(new RotateSystem())
                 .Add(new ArrowRotateAtTargetSystem())
                 .Add(new ArrowHideAtTargetDistanceSystem())
                 .Add(new TargetBlockSelectSystem())
                 .Add(new StartMiningSystem())
                 .Add(new MiningSystem())
+                .Add(new StopMiningToMoveSystem())
                 .Add(new PickUpItemSystem())
                 .Add(new DropItemToMachineSystem())
+                .Add(new NotDropTimerSystem())
                 ;
         }
 

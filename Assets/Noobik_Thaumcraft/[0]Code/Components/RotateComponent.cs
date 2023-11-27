@@ -8,5 +8,6 @@ namespace Noobik_Thaumcraft
     {
         public float Speed;
         public Transform Transform;
+        public Quaternion Quaternion;
     }
 }
