@@ -5,24 +5,45 @@ namespace Noobik_Thaumcraft
 {
     public class MiningSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<HeroTag, TargetBlockComponent, MiningDurationComponent> _heroFilter;
-        private readonly SaveLoadService _saveLoad;
+        private EcsFilter<HeroComponent, HasTargetBlockComponent, RotateComponent>.Exclude<MiningDurationComponent, MoveEvent> _TryMiningFilter;
+        private EcsFilter<HeroComponent, HasTargetBlockComponent, MiningDurationComponent> _miningFilter;
+        private EcsFilter<MiningDurationComponent, MoveEvent> _stopMiningFilter;
+        
+        private SaveLoadService _saveLoad;
         
         public void Run()
         {
-            foreach (var i in _heroFilter)
+            foreach (var i in _TryMiningFilter)
             {
-                ref var heroEntity = ref _heroFilter.GetEntity(i);
-                ref var blockEntity = ref _heroFilter.Get2(i).Reference.Entity;
-                ref var timer = ref _heroFilter.Get3(i);
+                ref var entity = ref _TryMiningFilter.GetEntity(i);
+                entity.Get<MiningDurationComponent>().Timer = 1f;
+                
+                ref var rotateComponent = ref _TryMiningFilter.Get3(i);
+                ref var targetComponent = ref _TryMiningFilter.Get2(i);
+                
+                ref var transform = ref rotateComponent.Transform;
+                ref var rotation = ref rotateComponent.Quaternion;
+                ref var target = ref targetComponent.Behaviour;
+
+                var direction = Vector3.Normalize(target.Entity.Get<BlockComponent>().GameObject.transform.position -
+                                                  transform.position);
+                
+                Quaternion toRotation = Quaternion.LookRotation(-direction, Vector3.up);
+                toRotation.eulerAngles = toRotation.eulerAngles.SetX(0).SetZ(0);
+                rotation = toRotation;
+            }
+            
+            foreach (var i in _miningFilter)
+            {
+                ref var heroEntity = ref _miningFilter.GetEntity(i);
+                ref var blockEntity = ref _miningFilter.Get2(i).Behaviour.Entity;
+                ref var timer = ref _miningFilter.Get3(i);
 
                 if (timer.Timer > 0)
                 {
                     timer.Timer -= Time.deltaTime;
                     continue;
                 }
-                
-                //
                 
                 ref var blockComponent = ref blockEntity.Get<BlockComponent>();
                 blockComponent.View.PlayBreak();
@@ -39,9 +60,15 @@ namespace Noobik_Thaumcraft
                 blockEntity.Get<PickItemComponent>().Type = blockComponent.ResourceType;
                 blockEntity.Get<PickItemComponent>().GameObject = blockComponent.GameObject;
 
-                heroEntity.Del<TargetBlockComponent>();
+                heroEntity.Del<HasTargetBlockComponent>();
                 
-                ref var entity = ref _heroFilter.GetEntity(i);
+                ref var entity = ref _miningFilter.GetEntity(i);
+                entity.Del<MiningDurationComponent>();
+            }
+            
+            foreach (var i in _stopMiningFilter)
+            {
+                ref var entity = ref _stopMiningFilter.GetEntity(i);
                 entity.Del<MiningDurationComponent>();
             }
         }

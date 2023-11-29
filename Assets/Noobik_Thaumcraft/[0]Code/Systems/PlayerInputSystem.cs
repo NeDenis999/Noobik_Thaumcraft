@@ -5,7 +5,7 @@ namespace Noobik_Thaumcraft
 {
     public class PlayerInputSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<HeroTag, MovableComponent, DirectionComponent> _directionFilter = null;
+        private readonly EcsFilter<HeroComponent, DirectionComponent> _directionFilter = null;
 
         private float _moveX;
         private float _moveZ;
@@ -16,7 +16,7 @@ namespace Noobik_Thaumcraft
             
             foreach (var i in _directionFilter)
             {
-                ref var directionComponent = ref _directionFilter.Get3(i);
+                ref var directionComponent = ref _directionFilter.Get2(i);
                 directionComponent.Direction = new Vector3(_moveX, 0, _moveZ);
 
                 if (IsMove())

@@ -7,7 +7,7 @@ namespace Noobik_Thaumcraft
     public class PickingZone : MonoBehaviour
     {
         [SerializeField]
-        private EntityReference _hero;
+        private EntityBehaviour _hero;
         
         private void OnTriggerEnter(Collider other)
         {
@@ -17,12 +17,12 @@ namespace Noobik_Thaumcraft
             if (_hero.Entity.Has<BreakTag>())
                 return;
             
-            ref var items = ref _hero.Entity.Get<PickItemsColectionComponent>();
+            ref var items = ref _hero.Entity.Get<PickItemsCollectionComponent>();
 
-            if (items.References == null)
-                items.References = new List<EntityReference>();
+            if (items.Entities == null)
+                items.Entities = new List<EntityBehaviour>();
             
-            items.References.Add(other.GetComponent<EntityReference>());
+            items.Entities.Add(other.GetComponent<EntityBehaviour>());
         }
 
         private void OnTriggerExit(Collider other)
@@ -30,8 +30,8 @@ namespace Noobik_Thaumcraft
             if (other.tag != "PickItem")
                 return;
             
-            if (_hero.Entity.Has<PickItemsColectionComponent>())
-                _hero.Entity.Get<PickItemsColectionComponent>().References.Remove(other.GetComponent<EntityReference>());
+            if (_hero.Entity.Has<PickItemsCollectionComponent>())
+                _hero.Entity.Get<PickItemsCollectionComponent>().Entities.Remove(other.GetComponent<EntityBehaviour>());
         }
     }
 }

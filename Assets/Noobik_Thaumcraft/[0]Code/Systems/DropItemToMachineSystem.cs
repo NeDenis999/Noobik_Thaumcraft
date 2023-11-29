@@ -5,14 +5,14 @@ namespace Noobik_Thaumcraft
 {
     public class DropItemToMachineSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<MachineComponent, IncomingHeroTriggerComponent> _machineFilter = null;
+        private EcsFilter<MachineComponent, IncomingHeroTriggerComponent>.Exclude<MoveEvent> _machineFilter;
 
         public void Run()
         {
             foreach (var index in _machineFilter)
             {
                 ref var entity = ref _machineFilter.GetEntity(index);
-                ref var heroEntity = ref entity.Get<IncomingHeroTriggerComponent>().Reference.Entity;
+                ref var heroEntity = ref entity.Get<IncomingHeroTriggerComponent>().Behaviour.Entity;
 
                 if (heroEntity.Has<NotDropDurationComponent>())
                     continue;
@@ -25,9 +25,9 @@ namespace Noobik_Thaumcraft
                 var item = items.References[^1];
                 items.References.Remove(item);
 
-                if (heroEntity.Has<BlocksComponent>() && heroEntity.Get<BlocksComponent>().References.Contains(item))
+                if (heroEntity.Has<BlocksComponent>() && heroEntity.Get<BlocksComponent>().Entities.Contains(item))
                 {
-                    heroEntity.Get<BlocksComponent>().References.Remove(item);
+                    heroEntity.Get<BlocksComponent>().Entities.Remove(item);
                 }
                 
                 Object.Destroy(item.Entity.Get<PickItemComponent>().GameObject);

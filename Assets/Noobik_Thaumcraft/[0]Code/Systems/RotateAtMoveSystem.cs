@@ -5,7 +5,7 @@ namespace Noobik_Thaumcraft
 {
     public sealed class RotateAtMoveSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<ModelComponent, DirectionComponent, RotateComponent, MoveEvent> _rotateFilter = null;
+        private readonly EcsFilter<TransformComponent, DirectionComponent, RotateComponent, MoveEvent> _rotateFilter = null;
 
         public void Run()
         {

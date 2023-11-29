@@ -6,8 +6,8 @@ namespace Noobik_Thaumcraft
 {
     public class PickUpItemSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<HeroTag, ModelComponent, PickItemsColectionComponent, ItemContainerComponent> _heroFilter;
-        private readonly SaveLoadService _saveLoad;
+        private EcsFilter<HeroComponent, TransformComponent, PickItemsCollectionComponent, ItemContainerComponent> _heroFilter;
+        private SaveLoadService _saveLoad;
         
         public void Run()
         {
@@ -15,26 +15,23 @@ namespace Noobik_Thaumcraft
             {
                 ref var itemsComponent = ref _heroFilter.Get3(index);
 
-                if (itemsComponent.References == null)
+                if (itemsComponent.Entities == null)
                     continue;
                 
-                ref var transform = ref _heroFilter.Get2(index).ModelTransform;
+                ref var transform = ref _heroFilter.Get2(index).Transform;
 
                 float minDistance = float.MaxValue;
-                EntityReference result = null;
+                EntityBehaviour result = null;
                 
-                foreach (var reference in itemsComponent.References)
+                foreach (var itemEntity in itemsComponent.Entities)
                 {
-                    /*if (!reference.Entity.Has<BreakTag>())
-                        continue;*/
-
-                    ref var item = ref reference.Entity.Get<PickItemComponent>();
+                    ref var item = ref itemEntity.Entity.Get<PickItemComponent>();
                     var distance = Vector3.Distance(item.Collider.transform.position, transform.position);
 
                     if (distance < minDistance)
                     {
                         minDistance = distance;
-                        result = reference;
+                        result = itemEntity;
                     }
                 }
 
@@ -48,7 +45,7 @@ namespace Noobik_Thaumcraft
                         continue;
                     }
                     
-                    itemsComponent.References.Remove(result);
+                    itemsComponent.Entities.Remove(result);
                     
                     var entityItemResult = result.Entity;
 
@@ -62,7 +59,7 @@ namespace Noobik_Thaumcraft
                     ref var backpackItems = ref heroEntity.Get<BackpackItemsComponent>();
 
                     if (backpackItems.References == null)
-                        backpackItems.References = new List<EntityReference>();
+                        backpackItems.References = new List<EntityBehaviour>();
                     
                     backpackItems.References.Add(result);
                     

@@ -20,23 +20,18 @@ namespace Noobik_Thaumcraft
 
         [SerializeField]
         private Slider _slider;
-        
-        [SerializeField]
-        private TargetsDataManager _targetsManager;
-
-        private void OnEnable()
-        {
-            _targetsManager.TargetUpdated += OnTargetUpdated;
-        }
-
-        private void OnDisable()
-        {
-            _targetsManager.TargetUpdated -= OnTargetUpdated;
-        }
 
         private void Start()
         {
-            ViewUpgrade(_targetsManager.GetCurrentTarget());
+            Startup.Instantiate.GameData.TargetDataIndexStorage.Upgrade += OnTargetDataUpdated;
+            
+            ViewUpgrade(Startup.Instantiate.Configuration.TargetData[Startup.Instantiate.GameData
+            .TargetDataIndexStorage.Get()]);
+        }
+
+        private void OnDestroy()
+        {
+            Startup.Instantiate.GameData.TargetDataIndexStorage.Upgrade -= OnTargetDataUpdated;
         }
 
         private void ViewUpgrade(TargetData target)
@@ -47,9 +42,9 @@ namespace Noobik_Thaumcraft
             _slider.value = 0;
         }
 
-        private void OnTargetUpdated(TargetData target)
+        private void OnTargetDataUpdated(int index)
         {
-            ViewUpgrade(target);
+            ViewUpgrade(Startup.Instantiate.Configuration.TargetData[index]);
         }
     }
 }

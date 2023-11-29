@@ -12,7 +12,7 @@ namespace Noobik_Thaumcraft
             {
                 ref var entity = ref _initFilter.GetEntity(i);
                 ref var request = ref _initFilter.Get1(i);
-                request.EntityReference.Entity = entity;
+                request.entityBehaviour.Entity = entity;
                 
                 entity.Del<InitializeEntityRequest>();
             }

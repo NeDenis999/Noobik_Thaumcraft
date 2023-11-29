@@ -2,7 +2,7 @@
 
 namespace Noobik_Thaumcraft
 {
-    public class HeroProvider : MonoProvider<HeroTag>
+    public class HeroProvider : MonoProvider<HeroComponent>
     {
         
     }

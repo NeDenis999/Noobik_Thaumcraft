@@ -1,10 +1,12 @@
 ﻿using System;
+using UnityEngine.Serialization;
 
 namespace Noobik_Thaumcraft
 {
     [Serializable]
     public struct InitializeEntityRequest
     {
-        public EntityReference EntityReference;
+        [FormerlySerializedAs("EntityReference")]
+        public EntityBehaviour entityBehaviour;
     }
 }

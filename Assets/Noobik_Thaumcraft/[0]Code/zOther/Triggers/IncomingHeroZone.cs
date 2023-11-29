@@ -6,7 +6,7 @@ namespace Noobik_Thaumcraft
     public class IncomingHeroZone : MonoBehaviour
     {
         [SerializeField]
-        private EntityReference _machine;
+        private EntityBehaviour _machine;
         
         private void OnTriggerEnter(Collider other)
         {
@@ -14,7 +14,7 @@ namespace Noobik_Thaumcraft
                 return;
 
             ref var hero = ref _machine.Entity.Get<IncomingHeroTriggerComponent>();
-            hero.Reference = other.GetComponent<EntityReference>();
+            hero.Behaviour = other.GetComponent<EntityBehaviour>();
         }
 
         private void OnTriggerExit(Collider other)

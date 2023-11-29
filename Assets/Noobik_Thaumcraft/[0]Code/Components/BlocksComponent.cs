@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace Noobik_Thaumcraft
 {
     [Serializable]
     public struct BlocksComponent
     {
-        public List<EntityReference> References;
+        [FormerlySerializedAs("Entities")]
+        public List<EntityBehaviour> Entities;
     }
 }

@@ -2,6 +2,6 @@
 {
     public struct IncomingHeroTriggerComponent
     {
-        public EntityReference Reference;
+        public EntityBehaviour Behaviour;
     }
 }

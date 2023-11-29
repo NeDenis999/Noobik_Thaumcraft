@@ -5,7 +5,7 @@ namespace Noobik_Thaumcraft
 {
     public class TargetBlockSelectSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<HeroTag, ModelComponent, BlocksComponent> _heroFilter;
+        private readonly EcsFilter<HeroComponent, TransformComponent, BlocksComponent> _heroFilter;
         private readonly SaveLoadService _saveLoad;
         
         public void Run()
@@ -14,15 +14,15 @@ namespace Noobik_Thaumcraft
             {
                 ref var blocks = ref _heroFilter.Get3(index);
 
-                if (blocks.References == null)
+                if (blocks.Entities == null)
                     continue;
                 
-                ref var transform = ref _heroFilter.Get2(index).ModelTransform;
+                ref var transform = ref _heroFilter.Get2(index).Transform;
 
                 float minDistance = float.MaxValue;
-                EntityReference result = null;
+                EntityBehaviour result = null;
                 
-                foreach (var reference in blocks.References)
+                foreach (var reference in blocks.Entities)
                 {
                     if (reference.Entity.Has<BreakTag>())
                         continue;
@@ -38,7 +38,7 @@ namespace Noobik_Thaumcraft
                 }
 
                 if (result != null)
-                    _heroFilter.GetEntity(index).Get<TargetBlockComponent>().Reference = result;
+                    _heroFilter.GetEntity(index).Get<HasTargetBlockComponent>().Behaviour = result;
             }
         }
     }

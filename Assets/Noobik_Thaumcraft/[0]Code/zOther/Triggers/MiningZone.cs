@@ -7,7 +7,7 @@ namespace Noobik_Thaumcraft
     public class MiningZone : MonoBehaviour
     {
         [SerializeField]
-        private EntityReference _hero;
+        private EntityBehaviour _hero;
         
         private void OnTriggerEnter(Collider other)
         {
@@ -16,10 +16,10 @@ namespace Noobik_Thaumcraft
 
             ref var blocks = ref _hero.Entity.Get<BlocksComponent>();
 
-            if (blocks.References == null)
-                blocks.References = new List<EntityReference>();
+            if (blocks.Entities == null)
+                blocks.Entities = new List<EntityBehaviour>();
             
-            blocks.References.Add(other.GetComponent<EntityReference>());
+            blocks.Entities.Add(other.GetComponent<EntityBehaviour>());
         }
 
         private void OnTriggerExit(Collider other)
@@ -28,7 +28,7 @@ namespace Noobik_Thaumcraft
                 return;
             
             if (_hero.Entity.Has<BlocksComponent>())
-                _hero.Entity.Get<BlocksComponent>().References.Remove(other.GetComponent<EntityReference>());
+                _hero.Entity.Get<BlocksComponent>().Entities.Remove(other.GetComponent<EntityBehaviour>());
         }
     }
 }

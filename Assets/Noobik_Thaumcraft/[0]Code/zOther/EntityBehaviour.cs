@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Noobik_Thaumcraft
 {
-    public class EntityReference : MonoBehaviour
+    public class EntityBehaviour : MonoBehaviour
     {
         public EcsEntity Entity;
     }

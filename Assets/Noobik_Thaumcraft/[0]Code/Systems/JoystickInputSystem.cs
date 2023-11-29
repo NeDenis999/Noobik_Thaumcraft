@@ -5,8 +5,8 @@ namespace Noobik_Thaumcraft
 {
     public class JoystickInputSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<HeroTag, MovableComponent, DirectionComponent>.Exclude<MoveEvent> _directionFilter;
-        private readonly Joystick _joystick;
+        private readonly EcsFilter<HeroComponent, DirectionComponent>.Exclude<MoveEvent> _directionFilter;
+        private readonly SceneData _sceneData;
 
         private float _moveX;
         private float _moveZ;
@@ -17,7 +17,7 @@ namespace Noobik_Thaumcraft
             
             foreach (var i in _directionFilter)
             {
-                ref var directionComponent = ref _directionFilter.Get3(i);
+                ref var directionComponent = ref _directionFilter.Get2(i);
                 directionComponent.Direction = new Vector3(_moveX, 0, _moveZ);
 
                 if (IsMove())
@@ -30,8 +30,8 @@ namespace Noobik_Thaumcraft
 
         private void SetDirection()
         {
-            _moveX = _joystick.Horizontal;
-            _moveZ = _joystick.Vertical;
+            _moveX = _sceneData.Joystick.Horizontal;
+            _moveZ = _sceneData.Joystick.Vertical;
         }
 
         private bool IsMove()
