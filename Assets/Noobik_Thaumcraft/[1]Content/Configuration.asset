@@ -14,3 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetData:
   - {fileID: 11400000, guid: 58c665bde9038d94e835e9ed31c576c8, type: 2}
+  - {fileID: 11400000, guid: 9bbc202f7bd81e144b1da2f5202b5001, type: 2}
+  DistanceCell: 0.5
+  MagnetizationSpeed: 6
+  PickUpDistance: 0.5
+  DropDistance: 0.5
+  NotDropTime: 0.5
+  SizeBlockInContainer: 1.3

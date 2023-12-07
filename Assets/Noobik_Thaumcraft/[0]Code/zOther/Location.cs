@@ -2,7 +2,9 @@
 {
     public enum Location
     {
-        None,
-        Crystals,
+        None = 0,
+        Crystals = 1,
+        CrystalMachine = 2,
+        
     }
 }

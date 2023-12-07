@@ -7,8 +7,8 @@ namespace Noobik_Thaumcraft
         [SerializeField]
         private Animator _animator;
 
-        private readonly static int BreakHash = Animator.StringToHash("Break");
-        private readonly static int StayHash = Animator.StringToHash("Stay");
+        private static readonly int BreakHash = Animator.StringToHash("Break");
+        private static readonly int StayHash = Animator.StringToHash("Stay");
 
         public void PlayBreak()
         {

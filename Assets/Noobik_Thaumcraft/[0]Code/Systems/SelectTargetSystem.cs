@@ -17,7 +17,7 @@ namespace Noobik_Thaumcraft
             {
                 var transform = _filter.Get2(i).Transform;
                 var target = GetTargetPoint(transform);
-                _gameData.TargetPointStorage.Set(target);
+                _gameData.TargetPoint = target;
             }
         }
         
@@ -25,7 +25,7 @@ namespace Noobik_Thaumcraft
         {
             foreach (var point in _sceneData.TargetPoints)
             {
-                if (point.Key == _configuration.TargetData[_gameData.TargetDataIndexStorage.Get()].Location)
+                if (point.Key == _configuration.TargetData[_gameData.IndexConfigTarget].Location)
                 {
                     float minDistance = float.MaxValue;
                     Transform result = point.Value[0];

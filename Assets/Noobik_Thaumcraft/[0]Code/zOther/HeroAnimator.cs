@@ -12,5 +12,15 @@ namespace Noobik_Thaumcraft
         {
             _animator.SetFloat("Speed", speed);
         }
+
+        public void PlayBreak()
+        {
+            _animator.SetTrigger("Break");
+        }
+
+        public void StopBreak()
+        {
+            _animator.SetTrigger("StopBreak");
+        }
     }
 }

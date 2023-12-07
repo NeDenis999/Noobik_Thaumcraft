@@ -17,7 +17,7 @@ namespace Noobik_Thaumcraft
                 ref var transform = ref _rotateFilter.Get2(i).Transform;
                 ref var hide = ref _rotateFilter.Get3(i);
                 
-                var distance = (_gameData.TargetPointStorage.Get().position - transform.position).magnitude;
+                var distance = (_gameData.TargetPoint.position - transform.position).magnitude;
                 var alpha = (Mathf.Clamp(distance, hide.MinDistance, hide.MaxDistance) - hide.MinDistance) / (hide.MaxDistance - hide.MinDistance);
                 
                 hide.Image.color = hide.Image.color.SetAlpha(alpha);

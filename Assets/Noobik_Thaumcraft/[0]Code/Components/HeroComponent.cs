@@ -12,5 +12,6 @@ namespace Noobik_Thaumcraft
         public HeroAnimator Animator;
         public CharacterController CharacterController;
         public float Speed;
+        public GameObject ToolContainer;
     }
 }

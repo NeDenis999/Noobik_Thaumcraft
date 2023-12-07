@@ -7,9 +7,10 @@ namespace Noobik_Thaumcraft
     {
         private readonly EcsWorld _world;
         private readonly EcsFilter<HeroComponent, TransformComponent, DirectionComponent> _movableFilter;
-
-        private float _currentSpeed;
-        private float _recoveryRate = 3f;
+        private GameData _data;
+        
+        //private float _currentSpeed;
+        //private float _recoveryRate = 3f;
         
         public void Run()
         {
@@ -23,16 +24,15 @@ namespace Noobik_Thaumcraft
                 ref var transform = ref transformComponent.Transform;
 
                 ref var characterController = ref heroComponent.CharacterController;
-                ref var speed = ref heroComponent.Speed;
                 ref var animator = ref heroComponent.Animator;
 
                 var rawDirection = (transform.right * direction.x) + (transform.forward * direction.z);
                 rawDirection = rawDirection.normalized;
-                characterController.Move(rawDirection * speed * Time.deltaTime);
+                characterController.Move(rawDirection * _data.Speed * Time.deltaTime);
                 
-                _currentSpeed =
-                    Mathf.MoveTowards(_currentSpeed, rawDirection.magnitude, _recoveryRate * Time.deltaTime);
-                animator.SetSpeed(_currentSpeed);
+                //_currentSpeed =
+                 //   Mathf.MoveTowards(_currentSpeed, rawDirection.magnitude, _recoveryRate * Time.deltaTime);
+                animator.SetSpeed(rawDirection.magnitude);
             }
         }
     }

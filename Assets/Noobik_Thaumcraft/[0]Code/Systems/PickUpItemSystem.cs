@@ -1,81 +1,80 @@
-﻿using System.Collections.Generic;
-using Leopotam.Ecs;
+﻿using Leopotam.Ecs;
 using UnityEngine;
 
 namespace Noobik_Thaumcraft
 {
     public class PickUpItemSystem : IEcsRunSystem
     {
-        private EcsFilter<HeroComponent, TransformComponent, PickItemsCollectionComponent, ItemContainerComponent> _heroFilter;
+        private EcsFilter<HeroComponent, TransformComponent, ItemContainerComponent, BackpackItemsComponent>
+            .Exclude<TimerNotPickUpBlockComponent> _heroFilter;
+
+        private EcsFilter<TimerNotPickUpBlockComponent> _notPickUpBlockFilter;
+        private EcsFilter<TriggerPickUpItemComponent> _triggerPickUp;
+
+        private EcsWorld _world;
         private SaveLoadService _saveLoad;
-        
+        private GameData _data;
+        private SceneData _sceneData;
+        private Configuration _config;
+
         public void Run()
         {
-            foreach (var index in _heroFilter)
+            foreach (var notPickUpIndex in _notPickUpBlockFilter)
             {
-                ref var itemsComponent = ref _heroFilter.Get3(index);
+                ref var timer = ref _notPickUpBlockFilter.Get1(notPickUpIndex);
 
-                if (itemsComponent.Entities == null)
-                    continue;
-                
-                ref var transform = ref _heroFilter.Get2(index).Transform;
+                if (timer.Timer > 0)
+                    timer.Timer -= Time.deltaTime;
+                else
+                    _notPickUpBlockFilter.GetEntity(notPickUpIndex).Del<TimerNotPickUpBlockComponent>();
+            }
 
+            foreach (var heroIndex in _heroFilter)
+            {
                 float minDistance = float.MaxValue;
-                EntityBehaviour result = null;
-                
-                foreach (var itemEntity in itemsComponent.Entities)
+                int resultIndex = -1;
+
+                var heroPosition = _heroFilter.Get2(heroIndex).Transform.position;
+
+                foreach (var pickUpIndex in _triggerPickUp)
                 {
-                    ref var item = ref itemEntity.Entity.Get<PickItemComponent>();
-                    var distance = Vector3.Distance(item.Collider.transform.position, transform.position);
+                    var pickUpTransform = _triggerPickUp.Get1(pickUpIndex).PickUpItem.transform;
+                    var pickUpPosition = pickUpTransform.position;
+                    var distance = Vector3.Distance(pickUpPosition, heroPosition);
 
                     if (distance < minDistance)
                     {
                         minDistance = distance;
-                        result = itemEntity;
+                        resultIndex = pickUpIndex;
                     }
                 }
 
-                if (result != null)
+                if (resultIndex == -1)
+                    continue;
+
+                //создаём сущность движущегося айтема
+                ref var itemMovedComponent = ref _world.NewEntity().Get<ResultItemMoveToHero>();
+                var item = _triggerPickUp.Get1(resultIndex).PickUpItem;
+                var triggerEntity = _triggerPickUp.GetEntity(resultIndex);
+                itemMovedComponent.ItemTransform = item.transform;
+
+                var pickUpBehaviour = _triggerPickUp.Get1(resultIndex).PickUpItem;
+                var pickUpEntity = pickUpBehaviour.Entity;
+
+                if (pickUpEntity.Has<PickItemComponent>())
                 {
-                    ref var timer = ref result.Entity.Get<PickUpDuration>();
-                    
-                    if (timer.Timer > 0)
-                    {
-                        timer.Timer -= Time.deltaTime;
-                        continue;
-                    }
-                    
-                    itemsComponent.Entities.Remove(result);
-                    
-                    var entityItemResult = result.Entity;
-
-                    if (entityItemResult.Has<BlockComponent>())
-                        entityItemResult.Get<BlockComponent>().View.PlayStay();
-
-                    ref var pickItem = ref entityItemResult.Get<PickItemComponent>();
-                    ref var container = ref _heroFilter.Get4(index);
-
-                    var heroEntity = _heroFilter.GetEntity(index);
-                    ref var backpackItems = ref heroEntity.Get<BackpackItemsComponent>();
-
-                    if (backpackItems.References == null)
-                        backpackItems.References = new List<EntityBehaviour>();
-                    
-                    backpackItems.References.Add(result);
-                    
-                    pickItem.Collider.transform.SetParent(container.Container);
-                    int number = backpackItems.References.Count - 1;
-                    float distance = 0.5f;
-                    pickItem.Collider.transform.localPosition = 
-                        new Vector3(-distance * (number % 3), distance * (number / 9 % 3), distance * (number / 3 % 3));
-                    
-                    pickItem.Collider.transform.eulerAngles = container.Container.eulerAngles;
-                    
-                    Object.Destroy(pickItem.Rigidbody);
-                    Object.Destroy(pickItem.Collider);
-
-                    _saveLoad.DiamondStorage.Add(1);
+                    ref var pickItemComponent = ref pickUpEntity.Get<PickItemComponent>();
+                    Object.Destroy(pickItemComponent.Collider);
+                    Object.Destroy(pickItemComponent.Rigidbody);
                 }
+
+                if (pickUpEntity.Has<BlockComponent>())
+                {
+                    ref var block = ref pickUpEntity.Get<BlockComponent>();
+                    block.View.PlayStay();
+                }
+
+                triggerEntity.Destroy();
             }
         }
     }

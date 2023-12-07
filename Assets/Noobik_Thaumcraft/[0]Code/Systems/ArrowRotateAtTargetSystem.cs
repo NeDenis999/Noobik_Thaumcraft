@@ -17,7 +17,7 @@ namespace Noobik_Thaumcraft
                 ref var transform = ref rotateComponent.Transform;
                 ref var speed = ref rotateComponent.Speed;
                 
-                var direction = (_gameData.TargetPointStorage.Get().position - transform.position).normalized;
+                var direction = (_gameData.TargetPoint.position - transform.position).normalized;
                 Quaternion toRotation = Quaternion.LookRotation(-direction, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, speed * Time.deltaTime);
                 transform.eulerAngles = transform.eulerAngles.SetX(0);

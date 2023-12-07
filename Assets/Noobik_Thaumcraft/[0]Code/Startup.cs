@@ -9,6 +9,7 @@ namespace Noobik_Thaumcraft
     {
         public EcsWorld World;
         private EcsSystems _systems;
+        private EcsSystems _fixedSystems;
         
         public SceneData SceneData;
         public Configuration Configuration;
@@ -31,17 +32,21 @@ namespace Noobik_Thaumcraft
 #endif  
             
             _systems = new EcsSystems(World);
+            _fixedSystems = new EcsSystems(World);
 
             _systems.ConvertScene();
+            //_fixedSystems.ConvertScene();
 
             AddSystems();
             AddOneFrames();
             AddInjections();
 
             _systems.Init();
+            _fixedSystems.Init();
             
 #if UNITY_EDITOR
-            EcsSystemsObserver.Create (_systems);
+            EcsSystemsObserver.Create(_systems);
+            EcsSystemsObserver.Create(_fixedSystems);
 #endif
         }
 
@@ -50,25 +55,39 @@ namespace Noobik_Thaumcraft
             _systems.Run();
         }
 
+        private void FixedUpdate()
+        {
+            _fixedSystems.Run();
+        }
+        
         private void AddSystems()
         {
             _systems
-                .Add(new EntityInitializeSystem())          //Пробрассываем ссылки Entity на сцену
-                .Add(new PlayerInputSystem())               //Обрыбатываем ввод с клавиатуры
-                .Add(new JoystickInputSystem())             //Обрыбатываем ввод с джостика
-                .Add(new MovementSystem())                  //Двигаем игрока
-                .Add(new RotateAtMoveSystem())              //Выставляем поворот
-                .Add(new RotateSystem())                    //Поворачиваем игрока
-                .Add(new SelectTargetSystem())              //Выбираем ближайшую цель
-                .Add(new ArrowRotateAtTargetSystem())       //поворачиваем к цели стрелку
-                .Add(new ArrowHideAtTargetDistanceSystem()) //Скрываем стрелку если находимся сшлищком близко к цели
-                .Add(new TargetBlockSelectSystem())         //Выбираем блок для добычи
-                //.Add(new StartMiningSystem())               //Выбираем блок как цель для поворота и вешаем таймер
-                .Add(new MiningSystem())                    //Ждём таймера и превращаем блок в айтем
-                //.Add(new StopMiningToMoveSystem())          //Убираем таймер для добычи
-                .Add(new PickUpItemSystem())                //Выбираем предмет вешаем таймер и подбираем в рюкзак
-                .Add(new DropItemToMachineSystem())         //Кидаем предмет в машину
-                .Add(new NotDropTimerSystem())              //Убираем таймер запрещающий кидать вещь в машину
+                .Add(new InitializeAllEntityBehaviourSystem())      //Пробрассываем ссылки Entity на сцену
+                .Add(new InitializeGameDataSystem())                //Инициализируем локальные данные
+                .Add(new InputPlayerSystem())                       //Обрыбатываем ввод с клавиатуры
+                .Add(new InputJoystickSystem())                     //Обрыбатываем ввод с джостика
+                .Add(new MovementSystem())                          //Двигаем игрока
+                .Add(new RotateAtMoveSystem())                      //Выставляем поворот
+                .Add(new RotateSystem())                            //Поворачиваем игрока
+                .Add(new SelectTargetSystem())                      //Выбираем ближайшую цель
+                .Add(new ArrowRotateAtTargetSystem())               //поворачиваем к цели стрелку
+                .Add(new ArrowHideAtTargetDistanceSystem())         //Скрываем стрелку если находимся сшлищком близко к цели
+                .Add(new MiningSystem())                            //Ждём таймера и превращаем блок в айтем
+                
+                .Add(new PickUpItemSystem())                        //Выбираем предмет вешаем таймер и подбираем в рюкзак
+                
+                .Add(new MachineDropItemSystem())                   //Кидаем предмет в машину
+                .Add(new MachineCreateSystem())                     //Создаём предмет если есть ресурсы
+                .Add(new PickUpMachineResultSystem())               //Забераем предмет из машины
+                .Add(new ItemMoveToSystem())                        //Двигаем предмет
+                
+                //.Add(new TimerNotDropSystem())                           //Убираем таймер запрещающий кидать вещь в машину
+                
+                ;
+            
+            _fixedSystems
+                .Add(new SelectMiningTargetBlockSystem()) //Выбираем блок для добычи
                 ;
         }
 
@@ -85,7 +104,7 @@ namespace Noobik_Thaumcraft
         private void AddOneFrames()
         {
             _systems
-                .OneFrame<MoveEvent>();
+                .OneFrame<EventMove>();
         }
 
         private void OnDestroy()
@@ -94,7 +113,9 @@ namespace Noobik_Thaumcraft
                 return;
         
             _systems.Destroy();
+            _fixedSystems.Destroy();
             _systems = null;
+            _fixedSystems = null;
             World.Destroy();
             World = null;
         }

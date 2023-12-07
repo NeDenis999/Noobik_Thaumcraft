@@ -10,10 +10,11 @@ namespace Noobik_Thaumcraft
     [Serializable]
     public class GameData
     {
-        public DiamondStorage DiamondStorage = new DiamondStorage();
-        public TargetPointStorage TargetPointStorage = new TargetPointStorage();
-        public TargetDataStorage TargetDataIndexStorage = new TargetDataStorage();
+        public Transform TargetPoint;
+        public int IndexConfigTarget;
         
-        public float Speed;
+        public int Diamonds;
+        public float Speed = 6;
+        public int MaxItems = 32;
     }
 }

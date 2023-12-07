@@ -5,7 +5,7 @@ namespace Noobik_Thaumcraft
 {
     public sealed class RotateAtMoveSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<TransformComponent, DirectionComponent, RotateComponent, MoveEvent> _rotateFilter = null;
+        private readonly EcsFilter<TransformComponent, DirectionComponent, RotateComponent, EventMove> _rotateFilter = null;
 
         public void Run()
         {
@@ -19,7 +19,10 @@ namespace Noobik_Thaumcraft
                 ref var transform = ref rotateComponent.Transform;
                 ref var speed = ref rotateComponent.Speed;
                 ref var rotation = ref rotateComponent.Quaternion;
-
+                
+                if (direction == Vector3.zero)
+                    continue;
+                
                 Quaternion toRotation = Quaternion.LookRotation(-direction, Vector3.up);
                 rotation = Quaternion.RotateTowards(transform.rotation, toRotation, speed * Time.deltaTime);
             }

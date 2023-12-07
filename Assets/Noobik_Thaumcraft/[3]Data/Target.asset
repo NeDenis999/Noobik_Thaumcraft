@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Target
   m_EditorClassIdentifier: 
   Icon: {fileID: -83154570, guid: 79183c9cf3410ad4bbd7cc105dcb0e96, type: 3}
-  Amount: 15
+  Amount: 3
   Location: 1

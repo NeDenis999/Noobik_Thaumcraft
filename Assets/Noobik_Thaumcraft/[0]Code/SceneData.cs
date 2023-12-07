@@ -11,5 +11,6 @@ namespace Noobik_Thaumcraft
     {
         public List<SerializablePair<Location, List<Transform>>> TargetPoints;
         public Joystick Joystick;
+        public UI UI;
     }
 }

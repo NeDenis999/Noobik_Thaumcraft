@@ -11,5 +11,6 @@ namespace Noobik_Thaumcraft
         public Rigidbody Rigidbody;
         public Collider Collider;
         public GameObject GameObject;
+        public PickItemAnimator Animator;
     }
 }
