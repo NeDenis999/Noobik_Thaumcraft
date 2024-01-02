@@ -18,16 +18,12 @@ namespace Noobik_Thaumcraft
 
             if (heroEntityBehaviour)
             {
-                /*if (heroEntityBehaviour.Entity.Has<BackpackItemsComponent>()
-                    && heroEntityBehaviour.Entity.Get<BackpackItemsComponent>().Items.Count != 0)
-                {*/
-                    if (_triggerEntity.IsAlive())
-                        _triggerEntity.Destroy();
+                if (_triggerEntity.IsAlive())
+                    _triggerEntity.Destroy();
 
-                    var newEntity = Startup.Instantiate.World.NewEntity();
-                    newEntity.Get<EventResultTriggeredMachine>().Machine = _machineEntiry;
-                    _triggerEntity = newEntity;
-                //}
+                var newEntity = Startup.Instantiate.World.NewEntity();
+                newEntity.Get<EventResultTriggeredMachine>().Machine = _machineEntiry;
+                _triggerEntity = newEntity;
             }
         }
 

@@ -12,8 +12,13 @@ namespace Noobik_Thaumcraft
         public ResourceType IncomingResource;
         public ResourceType ResultResource;
         public Slider Slider;
+        
+        [Header("Drop")]
         public Transform DropContainer;
         [HideInInspector] public List<EntityBehaviour> DropItems;
+        public int CountItems;
+        
+        [Header("Result")]
         public Transform ResultContainer;
         [HideInInspector] public List<EntityBehaviour> ResultItems;
 

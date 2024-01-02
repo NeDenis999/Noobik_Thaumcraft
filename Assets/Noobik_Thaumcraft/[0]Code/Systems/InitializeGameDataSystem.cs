@@ -20,7 +20,7 @@ namespace Noobik_Thaumcraft
             }
 
             _sceneData.UI.TargetScreen.ViewUpgrade(_data.Diamonds, _config.TargetData[_data.IndexConfigTarget]);
-            _sceneData.UI.HeroProgressText.text = $"{0}/{_data.MaxItems}";
+            _sceneData.UI.CountItemsLabel.ViewUpdate(0, _data.MaxItems);
         }
     }
 }

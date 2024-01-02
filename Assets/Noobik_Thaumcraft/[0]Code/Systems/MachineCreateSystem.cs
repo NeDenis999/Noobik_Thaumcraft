@@ -41,6 +41,7 @@ namespace Noobik_Thaumcraft
                     var dropItem = dropItems[dropItems.Count - 1];
                     Object.Destroy(dropItem.gameObject);
                     dropItems.Remove(dropItem);
+                    machine.CountItems -= 1;
                     
                     var result = Object.Instantiate(machine.ResultPrefab, machine.ResultContainer);
                     machine.ResultItems.Add(result);

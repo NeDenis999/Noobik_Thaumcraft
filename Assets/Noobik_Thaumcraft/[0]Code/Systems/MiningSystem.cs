@@ -10,6 +10,7 @@ namespace Noobik_Thaumcraft
         private EcsFilter<TimerMiningComponent, EventMove, HeroComponent> _stopMiningFilter;
 
         private SaveLoadService _saveLoad;
+        private GameData _data;
         
         public void Run()
         {
@@ -17,7 +18,7 @@ namespace Noobik_Thaumcraft
             {
                 ref var entity = ref _heroTryMiningFilter.GetEntity(i);
                 ref var hero = ref _heroTryMiningFilter.Get1(i);
-                entity.Get<TimerMiningComponent>().Timer = 1f;
+                entity.Get<TimerMiningComponent>().Timer = 1f - 0.2f * _data.MiningBoost;
                 
                 ref var rotateComponent = ref _heroTryMiningFilter.Get3(i);
                 ref var targetComponent = ref _heroTryMiningFilter.Get2(i);

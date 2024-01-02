@@ -17,5 +17,8 @@ namespace Noobik_Thaumcraft
         public double DropDistance = 0.5f;
         public float NotDropTime = 0.5f;
         public float SizeBlockInContainer = 1.3f;
+        
+        [Range(0.5f, 1.5f)]
+        public float ItemJumpDuration = 1f;
     }
 }

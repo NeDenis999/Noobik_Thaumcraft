@@ -13,9 +13,13 @@ namespace Noobik_Thaumcraft
         
         public SceneData SceneData;
         public Configuration Configuration;
+        
+        public UI UI;
+        
+        [HideInInspector]
         public GameData GameData;
 
-        public static Startup Instantiate;
+        public new static Startup Instantiate;
 
         [Header("Мусор")]
         [SerializeField]
@@ -31,6 +35,8 @@ namespace Noobik_Thaumcraft
             EcsWorldObserver.Create(World);
 #endif  
             
+            GameData = new GameData();
+
             _systems = new EcsSystems(World);
             _fixedSystems = new EcsSystems(World);
 
@@ -76,11 +82,14 @@ namespace Noobik_Thaumcraft
                 .Add(new MiningSystem())                            //Ждём таймера и превращаем блок в айтем
                 
                 .Add(new PickUpItemSystem())                        //Выбираем предмет вешаем таймер и подбираем в рюкзак
+                .Add(new TrashDropItemSystem())                      //Кидаем предмет в мусорку
                 
                 .Add(new MachineDropItemSystem())                   //Кидаем предмет в машину
                 .Add(new MachineCreateSystem())                     //Создаём предмет если есть ресурсы
                 .Add(new PickUpMachineResultSystem())               //Забераем предмет из машины
-                .Add(new ItemMoveToSystem())                        //Двигаем предмет
+
+                .Add(new ItemStartMoveSystem())                      //Создаём анимацию движения предмета
+                .Add(new ItemMoveCompleteSystem())                   //Кладём предмет куда-то и что-то с ним делаем
                 
                 //.Add(new TimerNotDropSystem())                           //Убираем таймер запрещающий кидать вещь в машину
                 

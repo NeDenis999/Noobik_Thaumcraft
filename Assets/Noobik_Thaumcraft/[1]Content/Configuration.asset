@@ -19,5 +19,6 @@ MonoBehaviour:
   MagnetizationSpeed: 6
   PickUpDistance: 0.5
   DropDistance: 0.5
-  NotDropTime: 0.5
+  NotDropTime: 0.2
   SizeBlockInContainer: 1.3
+  ItemJumpDuration: 0.535

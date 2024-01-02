@@ -1,4 +1,5 @@
-﻿using Leopotam.Ecs;
+﻿using DG.Tweening;
+using Leopotam.Ecs;
 using UnityEngine;
 
 namespace Noobik_Thaumcraft
@@ -31,32 +32,19 @@ namespace Noobik_Thaumcraft
 
             foreach (var heroIndex in _heroFilter)
             {
-                float minDistance = float.MaxValue;
-                int resultIndex = -1;
-
-                var heroPosition = _heroFilter.Get2(heroIndex).Transform.position;
-
-                foreach (var pickUpIndex in _triggerPickUp)
-                {
-                    var pickUpTransform = _triggerPickUp.Get1(pickUpIndex).PickUpItem.transform;
-                    var pickUpPosition = pickUpTransform.position;
-                    var distance = Vector3.Distance(pickUpPosition, heroPosition);
-
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        resultIndex = pickUpIndex;
-                    }
-                }
-
-                if (resultIndex == -1)
+                //выбор ближайшего предмета
+                var resultIndex = GetNearestItemIndex(heroIndex);
+                if (resultIndex == -1) 
                     continue;
 
-                //создаём сущность движущегося айтема
-                ref var itemMovedComponent = ref _world.NewEntity().Get<ResultItemMoveToHero>();
+                //создание анимации движенияn
                 var item = _triggerPickUp.Get1(resultIndex).PickUpItem;
+                ref var eventComponent = ref _world.NewEntity().Get<EventItemStartMove>();
+                eventComponent.Item = item;
+                eventComponent.Target = _heroFilter.Get1(heroIndex).CharacterController.GetComponent<EntityBehaviour>();
+                
+                //Настройка подобранного предмета
                 var triggerEntity = _triggerPickUp.GetEntity(resultIndex);
-                itemMovedComponent.ItemTransform = item.transform;
 
                 var pickUpBehaviour = _triggerPickUp.Get1(resultIndex).PickUpItem;
                 var pickUpEntity = pickUpBehaviour.Entity;
@@ -74,8 +62,33 @@ namespace Noobik_Thaumcraft
                     block.View.PlayStay();
                 }
 
+                //Удаление триггера
                 triggerEntity.Destroy();
             }
+        }
+
+        private int GetNearestItemIndex(int heroIndex)
+        {
+            float minDistance = float.MaxValue;
+            int resultIndex = -1;
+
+            var heroTransform = _heroFilter.Get2(heroIndex).Transform;
+            var heroPosition = heroTransform.position;
+
+            foreach (var pickUpIndex in _triggerPickUp)
+            {
+                var pickUpTransform = _triggerPickUp.Get1(pickUpIndex).PickUpItem.transform;
+                var pickUpPosition = pickUpTransform.position;
+                var distance = Vector3.Distance(pickUpPosition, heroPosition);
+
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    resultIndex = pickUpIndex;
+                }
+            }
+
+            return resultIndex;
         }
     }
 }

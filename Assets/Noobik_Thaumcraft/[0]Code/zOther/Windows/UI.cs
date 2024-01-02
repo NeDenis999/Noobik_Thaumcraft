@@ -10,6 +10,6 @@ namespace Noobik_Thaumcraft
         public ShopScreen ShopScreen;
         public MapScreen MapScreen;
         public SkillShopScreen SkillShopScreen;
-        public TMP_Text HeroProgressText;
+        public CountItemsLabel CountItemsLabel;
     }
 }

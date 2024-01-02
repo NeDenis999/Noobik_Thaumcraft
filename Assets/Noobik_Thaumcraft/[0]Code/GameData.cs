@@ -15,6 +15,7 @@ namespace Noobik_Thaumcraft
         
         public int Diamonds;
         public float Speed = 6;
-        public int MaxItems = 32;
+        public int MaxItems = 16;
+        public int MiningBoost = 0;
     }
 }

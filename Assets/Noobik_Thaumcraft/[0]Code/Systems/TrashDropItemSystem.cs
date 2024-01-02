@@ -1,32 +1,17 @@
-﻿using System.Collections.Generic;
-using Leopotam.Ecs;
-using UnityEngine;
+﻿using Leopotam.Ecs;
 
 namespace Noobik_Thaumcraft
 {
-    public class MachineDropItemSystem : IEcsRunSystem
+    public class TrashDropItemSystem : IEcsRunSystem
     {
-        private EcsFilter<TimerNotCanDropComponent> _notDropFilter;
+        private EcsFilter<EventDropTriggeredTrashcan> _eventTriggeredFilter;
         private EcsFilter<HeroComponent, TransformComponent, BackpackItemsComponent>.Exclude<TimerNotCanDropComponent> _heroFilter;
-        private EcsFilter<EventDropTriggeredMachine> _eventTriggeredFilter;
-        private EcsFilter<ItemMoveToMachine> _itemMovedFilter;
-
+        
         private EcsWorld _world;
-        private GameData _data;
         private Configuration _config;
-
+        
         public void Run()
         {
-            foreach (var notDropIndex in _notDropFilter)
-            {
-                ref var timer = ref _notDropFilter.Get1(notDropIndex);
-
-                if (timer.Timer > 0)
-                    timer.Timer -= Time.deltaTime;
-                else
-                    _notDropFilter.GetEntity(notDropIndex).Del<TimerNotCanDropComponent>();
-            }
-            
             foreach (var triggerIndex in _eventTriggeredFilter)
             {
                 foreach (var heroIndex in _heroFilter)
@@ -43,7 +28,7 @@ namespace Noobik_Thaumcraft
                     //создание анимации движения
                     ref var eventComponent = ref _world.NewEntity().Get<EventItemStartMove>();
                     eventComponent.Item = item;
-                    eventComponent.Target = _eventTriggeredFilter.Get1(triggerIndex).Machine;
+                    eventComponent.Target = _eventTriggeredFilter.Get1(triggerIndex).Trashcan;
                     
                     //удаление предмета
                     items.Remove(item);

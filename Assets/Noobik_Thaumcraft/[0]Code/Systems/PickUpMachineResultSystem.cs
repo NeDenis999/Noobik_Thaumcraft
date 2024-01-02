@@ -41,11 +41,13 @@ namespace Noobik_Thaumcraft
                     if (machine.ResultItems.Count == 0)
                         continue;
                     
-                    ref var itemMovedComponent = ref _world.NewEntity().Get<ResultItemMoveToHero>();
-                    var item = machine.ResultItems[machine.ResultItems.Count - 1];
-                    itemMovedComponent.ItemTransform = item.transform;
+                    //создание анимации движенияn
+                    var item =  machine.ResultItems[machine.ResultItems.Count - 1];
+                    ref var eventComponent = ref _world.NewEntity().Get<EventItemStartMove>();
+                    eventComponent.Item = item;
+                    eventComponent.Target = _heroFilter.Get1(heroIndex).CharacterController.GetComponent<EntityBehaviour>();
+                    
                     machine.ResultItems.Remove(item);
-
                     heroEntity.Get<TimerNotCanResultComponent>().Timer = _config.NotDropTime;
                 }
             }
