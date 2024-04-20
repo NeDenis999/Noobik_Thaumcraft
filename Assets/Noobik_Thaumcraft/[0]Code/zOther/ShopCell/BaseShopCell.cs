@@ -27,6 +27,8 @@ namespace Noobik_Thaumcraft
 
         private int _level = 1;
         private int _price;
+
+        public int MaxLevel => _maxLevel;
         
         private void OnEnable()
         {
@@ -46,6 +48,14 @@ namespace Noobik_Thaumcraft
         }
 
         protected abstract void Buy();
+
+        public void FullBuy()
+        {
+            for (int i = 0; i <= _maxLevel - _level; i++)
+            {
+                OnBuyClicked();
+            }
+        }
 
         protected void OnBuyClicked()
         {
